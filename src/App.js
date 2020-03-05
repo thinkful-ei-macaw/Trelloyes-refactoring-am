@@ -17,7 +17,7 @@ class App extends Component {
     }
   };
 
-  onDelete(idToDelete) {
+  handleDelete(idToDelete) {
     const { store } = this.state;
     store.lists.forEach(list => {
       list.cardIds = list.cardIds.filter(id => id !== idToDelete)
@@ -26,6 +26,28 @@ class App extends Component {
     delete store.allCards[idToDelete];
     
     this.setState({ store });
+  }
+
+  newRandomCard = () => {
+    const id = Math.random().toString(36).substring(2, 4)
+      + Math.random().toString(36).substring(2, 4);
+    return {
+      id,
+      title: `Random Card ${id}`,
+      content: 'lorem ipsum',
+    }
+  }
+
+  handleAdd(idToAdd) {
+    const newC = this.newRandomCard()
+    const { store } = this.state;
+
+    store.lists.find(list => list.id === idToAdd)
+      .cardIds.push(newC.id)
+
+    store.allCards[newC.id] = newC
+
+    this.setState({ store })
   }
 
   render() {
@@ -41,7 +63,8 @@ class App extends Component {
               key={list.id}
               header={list.header}
               cards={list.cardIds.map(id => store.allCards[id])}
-              onDelete={id => this.onDelete(id)}
+              onDelete={id => this.handleDelete(id)}
+              onAdd={() => this.handleAdd(list.id)}
             />
           ))}
         </div>
