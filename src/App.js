@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import List from './List'
+import List from './List/List';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      store: props.store
+    }
+  }
+
   static defaultProps = {
     store: {
       lists: [],
@@ -10,8 +17,19 @@ class App extends Component {
     }
   };
 
+  onDelete(idToDelete) {
+    const { store } = this.state;
+    store.lists.forEach(list => {
+      list.cardIds = list.cardIds.filter(id => id !== idToDelete)
+    });
+    
+    delete store.allCards[idToDelete];
+    
+    this.setState({ store });
+  }
+
   render() {
-    const { store } = this.props
+    const { store } = this.state
     return (
       <main className='App'>
         <header className='App-header'>
@@ -23,6 +41,7 @@ class App extends Component {
               key={list.id}
               header={list.header}
               cards={list.cardIds.map(id => store.allCards[id])}
+              onDelete={id => this.onDelete(id)}
             />
           ))}
         </div>

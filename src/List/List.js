@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from './Card'
+import Card from '../Card/Card'
 import './List.css';
 
 export default function List(props) {
@@ -12,8 +12,10 @@ export default function List(props) {
         {props.cards.map((card) =>
           <Card
             key={card.id}
+            id={card.id}
             title={card.title}
             content={card.content}
+            onDelete={id => props.onDelete(id)}
           />
         )}
         <button
